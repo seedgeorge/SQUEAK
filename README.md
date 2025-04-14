@@ -10,3 +10,17 @@ Currently, SQUEAK is available through github and requires the `devtools` librar
 # install.packages("devtools")
 devtools::install_github("seedgeorge/SQUEAK")
 ```
+
+### Minimal Usage Example
+
+The following code uses an dataset included in the package, performs a simple data check, and then makes a simple plot.
+
+``` R
+data("long_mice")
+ready_data = check_long(long_mice,
+                        timecol = "Days",
+                        IDcol = 'Number',
+                        groupcol = 'Group',
+                        measurementcol = 'Value')
+plot_raw_lines(ready_data = ready_data )
+```
