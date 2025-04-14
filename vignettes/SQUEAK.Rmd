@@ -1,0 +1,77 @@
+---
+title: "Statistical Quantification & Understanding of Experimental Animal Kinetics (SQUEAK)"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{SQUEAK}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = " "
+)
+```
+
+```{r setup}
+library(SQUEAK)
+```
+
+## Test Data
+### Real-world long-format data.
+This data is a subset of data from a published trial testing several different drugs + a combination. Multiple drug arms, multiple individuals studied longitudinally. An ideal test case for this package. Used with permission of authors: [citation here]
+```{r}
+data("long_mice")
+```
+
+## Data Formats
+### Long
+The ideal format for this package is 'long', ie. multiple rows per individual/timepoint/group combination
+Here are the first ten rows of the long-format test dataset.
+```{r}
+head(long_mice,n=10)
+```
+The four columns here are as follows:
+
+ * The day the recording was made
+ * The group/drug arm that the individual was part of
+ * The ID indicating which individual the result belongs to
+ * The measured value - in this case, tumour volumn in cm3
+ 
+### Other Formats
+
+We may consider supporting other formats in the future, but at the moment are focusing on other areas. 
+
+## Checking Data
+We have included a function that tries to take some of the guess work out of data preparation.
+It does a couple of sensible things, including crashing when the data looks 'wrong'.
+```{r}
+ready_data = check_long(long_mice,
+                        timecol = "Days",
+                        IDcol = 'Number',
+                        groupcol = 'Group',
+                        measurementcol = 'Value')
+```
+
+## Basic Plots
+It is possible to make some starter plots.
+
+A line plot, one line per individual.
+```{r fig.height=6, fig.width=4}
+# raw line graphs
+plot_raw_lines(ready_data = ready_data )
+```
+
+Some slopes, one per individual.
+```{r fig.height=6, fig.width=4}
+# linear model slopes
+plot_raw_slopes(ready_data = ready_data )
+```
+
+
+## Model Generation
+
+## Model Plotting
+
+## Combined Plot Assembly
