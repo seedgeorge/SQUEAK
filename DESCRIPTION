@@ -2,23 +2,23 @@ Package: SQUEAK
 Title: Statistical Quantification & Understanding of Experimental Animal Kinetics
 Version: 0.0.0.9000
 Authors@R: 
-    person("George", "Seed", , "seedgeorge@gmail.com", role = c("aut", "cre"),
-           comment = c(ORCID = "0000-0002-1105-1781"))
-    person("Jan", "Rekowski", , "jan.rekowski@icr.ac.uk", role = c("aut"))
+    c(person("George", "Seed", , "seedgeorge@gmail.com", role = c("aut", "cre"),
+           comment = c(ORCID = "0000-0002-1105-1781")),
+      person("Jan", "Rekowski", , "jan.rekowski@icr.ac.uk", role = c("aut")))
+Maintainer: George Seed <seedgeorge@gmail.com>
 Description: This package applies mixed-effect regressions to longitudinal studies of tumour growth data in mouse studies, with the goal of creating user-friendly output plots and some helpful statistics. Plots depend on the grammar of graphics (ggplot) ecosystem.
-License: `use_mit_license()`, `use_gpl3_license()` or friends to pick a
-    license
+License: MIT + file LICENSE
 Encoding: UTF-8
 Roxygen: list(markdown = TRUE)
 RoxygenNote: 7.3.2
 Imports:
-    readxl,
-    tidyverse,
     broom.mixed,
     lme4,
     sjPlot,
     nlme,
-    janitor
+    stats,
+    cli,
+    rlang
 Depends: 
     ggplot2,
     R (>= 2.10)

@@ -28,13 +28,13 @@ plot_raw_slopes = function(ready_data, title = NULL, subtitle = NULL, xtitle = N
   if(is.null(subtitle)) {
     cli::cli_alert_warning("No subtitle specified, using default.")
   }
-  arm_slopes = ggplot(ready_data,aes(x = time, y = log10(measurement),group=ID)) + 
-    facet_wrap(~ group,nrow=length(unique(ready_data$group))) + 
+  arm_slopes = ggplot(ready_data,aes(x = .data$time, y = log10(.data$measurement),group=.data$ID)) + 
+    facet_wrap(~ .data$group,nrow=length(unique(ready_data$group))) + 
     stat_smooth(method = "lm",col="grey10",se = F,linetype=2,size=0.5) + 
     theme_minimal() +
     theme(axis.title = element_text(size=10)) +
     theme(panel.grid.minor = element_blank()) +
-    geom_point(aes(col=group),alpha=1,size=1) + 
+    geom_point(aes(col=.data$group),alpha=1,size=1) + 
     scale_x_continuous(name = ifelse(!is.null(xtitle),xtitle,"Time From Baseline")) + 
     scale_y_continuous(name = ifelse(!is.null(ytitle),ytitle,"Tumour Volume")) +
     scale_color_brewer(palette="Dark2") + # improve this with a custom palette option
@@ -74,13 +74,13 @@ plot_raw_lines = function(ready_data, title = NULL, subtitle = NULL, xtitle = NU
   if(is.null(subtitle)) {
     cli::cli_alert_warning("No subtitle specified, using default.")
   }
-  arm_slopes = ggplot(ready_data,aes(x = time, y = measurement,group=ID)) + 
-    facet_wrap(~ group,nrow=length(unique(ready_data$group))) + 
+  arm_slopes = ggplot(ready_data,aes(x = .data$time, y = .data$measurement,group=.data$ID)) + 
+    facet_wrap(~ .data$group,nrow=length(unique(ready_data$group))) + 
     geom_line(col="darkgrey") + 
     theme_minimal() +
     theme(axis.title = element_text(size=10)) +
     theme(panel.grid.minor = element_blank()) +
-    geom_point(aes(col=group), alpha=0.5, size=1) +
+    geom_point(aes(col=.data$group), alpha=0.5, size=1) +
     scale_x_continuous(name = ifelse(!is.null(xtitle),xtitle,"Time From Baseline")) + 
     scale_y_continuous(name = ifelse(!is.null(ytitle),ytitle,"Tumour Volume")) +
     scale_color_brewer(palette="Dark2") + # improve this with a custom optional palette option
