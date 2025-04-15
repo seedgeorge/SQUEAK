@@ -13,7 +13,7 @@ devtools::install_github("seedgeorge/SQUEAK")
 
 ### Minimal Usage Example
 
-The following code uses an dataset included in the package, performs a simple data check, and then makes a simple plot.
+The following code uses a dataset included in the package, performs a simple data check, and then makes a simple plot.
 
 ``` R
 data("long_mice")

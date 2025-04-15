@@ -4,6 +4,7 @@ Version: 0.0.0.9000
 Authors@R: 
     person("George", "Seed", , "seedgeorge@gmail.com", role = c("aut", "cre"),
            comment = c(ORCID = "0000-0002-1105-1781"))
+    person("Jan", "Rekowski", , "jan.rekowski@icr.ac.uk", role = c("aut"))
 Description: This package applies mixed-effect regressions to longitudinal studies of tumour growth data in mouse studies, with the goal of creating user-friendly output plots and some helpful statistics. Plots depend on the grammar of graphics (ggplot) ecosystem.
 License: `use_mit_license()`, `use_gpl3_license()` or friends to pick a
     license

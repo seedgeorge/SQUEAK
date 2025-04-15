@@ -14,6 +14,14 @@ check_long(
 }
 \arguments{
 \item{long_data}{The input data.frame in long format.}
+
+\item{timecol}{Name of the 'time' column (optional).}
+
+\item{groupcol}{Name of the 'group' column (optional).}
+
+\item{IDcol}{Name of the 'ID' column (optional).}
+
+\item{measurementcol}{Name of the 'measurement' column (optional).}
 }
 \value{
 The infile, checked and cleaned, still in long format.
@@ -22,5 +30,5 @@ The infile, checked and cleaned, still in long format.
 This SQUEAK function checks a long-format data frame for downstream compatibility.
 It will error out if problems are detected, and otherwise return an analysis-ready data frame.
 It expects a data frame with the columns: 'time','group','ID','measurement'
-The optional parameters (timecol etc) allow (and should be used) the user to specify the names of the columns that should be used instead of the above.
+The optional parameters (timecol etc) allow the user to specify the names of the columns that should be used instead of the above. The analyses this package is geared for are essentially predicated on having: multiple measurements (for example, tumour volume) over time (days, weeks, etc), across multiple individuals (animal models) and treatment arms (or strains, etc).
 }

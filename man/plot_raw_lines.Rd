@@ -2,7 +2,7 @@
 % Please edit documentation in R/plotting.R
 \name{plot_raw_lines}
 \alias{plot_raw_lines}
-\title{Plot Lines Per Individual+Group}
+\title{Plot Lines Per Individual and Group}
 \usage{
 plot_raw_lines(
   ready_data,
@@ -13,15 +13,32 @@ plot_raw_lines(
 )
 }
 \arguments{
-\item{long_data}{The input data.frame in long format.}
+\item{ready_data}{The input data.frame in long format, containing the columns: time, group, ID and measurement.}
+
+\item{title}{A custom title for the graph (optional)}
+
+\item{subtitle}{A custom title for the graph (optional)}
+
+\item{xtitle}{A custom x-axis title for the graph (optional)}
+
+\item{ytitle}{A custom y-axis title for the graph (optional)}
 }
 \value{
-A nice faceted plot.
+A graph in ggplot format, plotting one line for each individual over time, split by the grouping variable (eg. drug arm).
 }
 \description{
 This SQUEAK function uses analysis-ready data and plots lines for each individual.
 No y-axis transformation is applied, so curves should be apparent.
-Grouping variable is used to see different treatments etc.
+A grouping variable is used to evaluate different treatments; if only one group is present this can be set to a dummy variable.
 It performs minimal error checking and will crash ungracefully if the wrong things are given to it.
 The optional parameters allow the user to specify axis/title labels.
+}
+\examples{
+data("long_mice")
+ready_data = check_long(long_mice,
+                        timecol = "Days",
+                        IDcol = 'Number',
+                        groupcol = 'Group',
+                        measurementcol = 'Value')
+plot_raw_lines(ready_data = ready_data ) # expects the columns: time, group, ID and measurement
 }
