@@ -10,33 +10,25 @@
 #' @export
 mixed_effect_model = function(ready_data, random_slope = TRUE, random_intercept = FALSE) {
   if(random_slope == TRUE & random_intercept == TRUE) {
-    nlme::lme(fixed = log(measurement) ~ time * group,
+    model = nlme::lme(fixed = log(measurement) ~ time * group,
               random = ~ (1+time)|ID, # random slope random intercept
               control = list(msVerbose = TRUE, returnObject = TRUE),
               data = ready_data)
   }
   if (random_slope == TRUE & random_intercept == FALSE) {
-    nlme::lme(fixed = log(measurement) ~ time * group,
-              random = ~ (1+time)|ID, # random slope random intercept
+    model = nlme::lme(fixed = log(measurement) ~ time * group,
+              random = ~ 1 |ID, # random slope random intercept
               control = list(msVerbose = TRUE, returnObject = TRUE),
               data = ready_data) 
   }
-
+  if (random_slope == FALSE & random_intercept == FALSE) {
+    cli::cli_alert_info("Are you sure about not having random slopes or intercepts?")
+    stop()
+  }
+ return(model) 
 }
-# 
-# 
-# r = ready_data
-# r = within(r,ID = factor(group:ID))
-# t1 = nlme::lme(fixed = log(measurement) ~ time * group,
-#           random = ~ (1+time)|ID, # random slope random intercept
-#           control = list(msVerbose = TRUE, returnObject = TRUE),
-#           data = r)
-# 
-# t2 = nlme::lme(fixed = log(measurement) ~ time * group,
-#           random = ~ (1+time)|ID, # random slope random intercept
-#           control = list(msVerbose = TRUE, returnObject = TRUE),
-#           data = r)
-# 
+
+
 # m1 = plot_model(t1,terms = c("time:groupIpatasertib",
 #                         "time:groupS63845",
 #                         "time:groupIpa+S63845"),

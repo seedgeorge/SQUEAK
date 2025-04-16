@@ -2,6 +2,7 @@
 
 export(check_long)
 export(mixed_effect_model)
+export(plot_modelled_curves)
 export(plot_raw_lines)
 export(plot_raw_slopes)
 importFrom(ggplot2,aes)

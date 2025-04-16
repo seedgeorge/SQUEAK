@@ -42,7 +42,9 @@ The four columns here are as follows:
 ### Other Formats
 
 We may consider supporting other formats in the future, but at the moment are focusing on other areas. 
+
 ## Checking Data
+
 We have included a function that tries to take some of the guess work out of data preparation.
 It does a couple of sensible things, including crashing when the data looks 'wrong'.
 ```{r}
@@ -71,10 +73,15 @@ plot_raw_slopes(ready_data = ready_data )
 ## Model Generation
 We will make a regression model using an appropriately named function.
 ```{r}
-mixed_model = mixed_effect_model(ready_data = ready_data)
+mixed_model = mixed_effect_model(ready_data = ready_data,random_slope = T,random_intercept = T)
 ```
 
 
 ## Model Plotting
+
+```{r fig.height=4, fig.width=4}
+plot_modelled_curves(mixed_model)
+```
+
 
 ## Combined Plot Assembly
