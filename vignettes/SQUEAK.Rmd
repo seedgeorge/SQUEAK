@@ -37,12 +37,11 @@ The four columns here are as follows:
  * The day the recording was made
  * The group/drug arm that the individual was part of
  * The ID indicating which individual the result belongs to
- * The measured value - in this case, tumour volumn in cm3
+ * The measured value - in this case, tumour volume in cm3
  
 ### Other Formats
 
 We may consider supporting other formats in the future, but at the moment are focusing on other areas. 
-
 ## Checking Data
 We have included a function that tries to take some of the guess work out of data preparation.
 It does a couple of sensible things, including crashing when the data looks 'wrong'.
@@ -69,8 +68,12 @@ Some slopes, one per individual.
 plot_raw_slopes(ready_data = ready_data )
 ```
 
-
 ## Model Generation
+We will make a regression model using an appropriately named function.
+```{r}
+mixed_model = mixed_effect_model(ready_data = ready_data)
+```
+
 
 ## Model Plotting
 

@@ -1,12 +1,12 @@
 #' Tumour volume measurements from a mice model dataset.
 #'
-#' A dataset c
+#' An example dataset containing longitudinal measures of  tumour volume across 4 drug arms.
 #'
 #' \itemize{
 #'   \item Days the day that the measurement was taken
 #'   \item Group the drug arm each mouse was treated with
 #'   \item Number the ID of each individual mouse, unique to the drug arm
-#'   \item Value the measurement value, in thie case tumour volume (cm3)
+#'   \item Value the measurement value, in this case tumour volume (cm3)
 #' }
 #'
 #' @docType data

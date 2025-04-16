@@ -10,9 +10,10 @@
 #' @param groupcol Name of the 'group' column (optional).
 #' @param IDcol Name of the 'ID' column (optional).
 #' @param measurementcol Name of the 'measurement' column (optional).
+#' @param set_nested Individual IDs should usually be unique to treatment groups. If this is not desired, set this flag to FALSE.
 #' @return The infile, checked and cleaned, still in long format.
 #' @export
-check_long = function(long_data,timecol = NULL, groupcol = NULL, IDcol = NULL, measurementcol = NULL) {
+check_long = function(long_data, timecol = NULL, groupcol = NULL, IDcol = NULL, measurementcol = NULL, set_nested = TRUE) {
   # Check if input is a data frame
   if (!is.data.frame(long_data)) {
     stop("Input must be a data frame!")
@@ -55,7 +56,37 @@ check_long = function(long_data,timecol = NULL, groupcol = NULL, IDcol = NULL, m
 
   ## add something here to check columnn types
   ## numeric for time/measurement definitely
+  measurement_numeric = is.numeric(unlist(long_data[,colnames(long_data) == 'measurement' | colnames(long_data) == measurementcol]))  
+  if(measurement_numeric == FALSE) {
+      stop("Measurements are not numeric!")
+  }
+  time_numeric = is.numeric(unlist(long_data[,colnames(long_data) == 'time' | colnames(long_data) == timecol]))  
+  if(time_numeric == FALSE) {
+    stop("Times are not numeric!")
+  }
+
   ## character for the others maybe?
+  
+  ## figure out if ID data is crossed or nested within group and raise a warning if crossed
+  ## most mouse experiments are nested, ie. each mouse is unique to a group - you don't treat the same mouse on multiple arms
+  groupsplit = split(long_data,long_data[,groupcol])
+  detect_crossed = any(as.vector(unique(groupsplit[[1]][,IDcol]))[[1]] %in% as.vector(unique(groupsplit[[2]][,IDcol]))[[1]])
+  if (detect_crossed == TRUE) {
+    cli::cli_alert_warning("Non-unique individual IDs detected in the first two groups, this will result in a crossed model rather than a nested one. Usually mice are only treated once.")
+    if(set_nested == TRUE) {
+      cli::cli_alert_warning("Making unique IDs! Change this behaviour with the 'set_nested' parameter.")
+      long_data[,IDcol] = apply(long_data[,c(groupcol,IDcol)],1,paste,collapse = '_')
+    }
+  } else {
+    cli::cli_alert_info("Data structure suggests nested model, with unique individuals per group.")
+  }
+  
+  ## Set Group Order based on internal order [add option to this later?]
+  long_data[,groupcol] = factor(as.vector(unlist(long_data[,groupcol])),
+                                levels = unique(as.vector(unlist(long_data[,groupcol]))))
+  groups = as.vector(unlist(unique(long_data[,groupcol])))
+  cli::cli_alert_info("Groups: {.val {groups}}.")
+  cli::cli_alert_info("Assuming reference level: {.val {groups[1]}}.")
   
   ## Any NA data?
   NArows = sum(rowSums(is.na(long_data)))

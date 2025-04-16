@@ -9,7 +9,8 @@ check_long(
   timecol = NULL,
   groupcol = NULL,
   IDcol = NULL,
-  measurementcol = NULL
+  measurementcol = NULL,
+  set_nested = TRUE
 )
 }
 \arguments{
@@ -22,6 +23,8 @@ check_long(
 \item{IDcol}{Name of the 'ID' column (optional).}
 
 \item{measurementcol}{Name of the 'measurement' column (optional).}
+
+\item{set_nested}{Individual IDs should usually be unique to treatment groups. If this is not desired, set this flag to FALSE.}
 }
 \value{
 The infile, checked and cleaned, still in long format.
