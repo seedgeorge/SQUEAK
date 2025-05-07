@@ -12,6 +12,7 @@ knitr::opts_chunk$set(
   collapse = TRUE,
   comment = " "
 )
+options(rmarkdown.html_vignette.check_title = FALSE)
 ```
 
 ```{r setup}
@@ -59,8 +60,19 @@ ready_data = check_long(long_mice,
 ## Basic Plots
 It is possible to make some starter plots.
 First, we will use a utility function to make a palette that SQUEAK will understand.
-```{r}
+```{r fig.height=2, fig.width=4}
 colors = set_palette(ready_data)
+barplot(rep(1,length(colors)), 
+        col=colors, yaxt='n', 
+        border=F, 
+        names.arg = names(colors), 
+        las=2)
+
+# alternatively, you could use a custom named vector, manually assigning a color to each group
+colors = c('Control' = 'grey20',
+           'DrugX' = '#7570B3',
+           'DrugY' = '#D95F02',
+           'ComboXY' = '#1B9E77')
 barplot(rep(1,length(colors)), 
         col=colors, yaxt='n', 
         border=F, 
@@ -72,13 +84,13 @@ barplot(rep(1,length(colors)),
 A line plot, one line per individual.
 ```{r fig.height=6, fig.width=4}
 # raw line graphs
-plot_raw_lines(ready_data = ready_data)
+plot_raw_lines(ready_data = ready_data, palette= colors)
 ```
 
 Some slopes, one per individual.
 ```{r fig.height=6, fig.width=4}
 # linear model slopes
-plot_raw_slopes(ready_data = ready_data )
+plot_raw_slopes(ready_data = ready_data, palette = colors)
 ```
 
 ## Model Generation
@@ -90,16 +102,23 @@ mixed_model = mixed_effect_model(ready_data = ready_data,random_slope = T,random
 
 ## Model Plotting
 
-```{r fig.height=4, fig.width=4}
-plot_modelled_curves(mixed_model)
+```{r fig.height=4, fig.width=4, message=FALSE, warning=FALSE}
+plot_modelled_curves(mixed_model,palette= colors)
 ```
 
-```{r fig.height=4, fig.width=4}
-plot_modelled_slopes(mixed_model)
+```{r fig.height=4, fig.width=4, message=FALSE, warning=FALSE}
+plot_modelled_slopes(mixed_model,palette= colors)
 ```
 
-```{r fig.height=4, fig.width=4}
-plot_interaction_forest(mixed_model)
+```{r fig.height=4, fig.width=4, message=FALSE, warning=FALSE}
+plot_interaction_forest(mixed_model,palette= colors)
 ```
 
 ## Combined Plot Assembly
+```{r}
+# slope = plot_raw_lines(ready_data = ready_data, palette= colors)
+# curvforest = plot_modelled_curves(mixed_model,palette = colors) / plot_interaction_forest(mixed_model,palette = colors) 
+# fig = slope + plot_spacer() + curvforest + plot_layout(ncol=3,widths = c(2,0.5,2))
+# fig
+```
+

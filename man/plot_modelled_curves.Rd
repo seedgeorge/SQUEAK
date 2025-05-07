@@ -9,7 +9,8 @@ plot_modelled_curves(
   xtitle = NULL,
   ytitle = NULL,
   title = NULL,
-  subtitle = NULL
+  subtitle = NULL,
+  palette = NULL
 )
 }
 \arguments{
@@ -22,6 +23,8 @@ plot_modelled_curves(
 \item{title}{A custom title for the graph (optional)}
 
 \item{subtitle}{A custom title for the graph (optional)}
+
+\item{palette}{A custom palette for the graph, from the set_palette() function (optional)}
 }
 \value{
 A graph in ggplot format, plotting one growth curve per the grouping variable (eg. drug arm).

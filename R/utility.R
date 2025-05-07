@@ -150,14 +150,17 @@ column_check = function(long_data, timecol = NULL, groupcol = NULL, IDcol = NULL
 #'
 #' This small function makes a palette for the SQUEAK plots.
 #' It will errors out if common issues are detected.
-#' It expects a data.frame created by the check_long function, with a column named 'groups'.
+#' It expects a data.frame created by the check_long function, with a column named 'group'.
 #' In the future, optional parameters will work to let you change the base palette etc.
 #'
 #' @param ready_data Analysis-ready data frame produced by check_long().
+#' @param brewer_name What colorbrewer palette you'd like to draw from? (optional).
 #' @return The palette, a named vector.
-set_palette = function(ready_data) {
+#' @export
+set_palette = function(ready_data, brewer_name = NULL) {
   groups = as.vector(unlist(unique(ready_data[,'group'])))
-  colors = RColorBrewer::brewer.pal(length(groups),name = 'Dark2')
+  colors = RColorBrewer::brewer.pal(length(groups),
+                                    name = ifelse(is.null(brewer_name), 'Dark2',brewer_name))
   names(colors) = groups
   return(colors)
 }

@@ -6,11 +6,12 @@
 #' It performs minimal error checking and will crash ungracefully if the wrong things are given to it.
 #' The optional parameters allow the user to specify axis/title labels.
 #'
-#' @param ready_data The input data.frame in long format, containing the columns: time, group, ID and measurement. 
+#' @param ready_data The input data.frame in long format, containing the columns: time, group, ID and measurement
 #' @param title A custom title for the graph (optional)
 #' @param subtitle A custom title for the graph (optional)
 #' @param xtitle A custom x-axis title for the graph (optional)
 #' @param ytitle A custom y-axis title for the graph (optional)
+#' @param palette A custom palette for the graph, from the set_palette() function (optional)
 #' @return A graph in ggplot format, plotting the slope for each individual over time, split by the grouping variable (eg. drug arm).
 #' @examples
 #' data("long_mice")
@@ -37,11 +38,13 @@ plot_raw_slopes = function(ready_data, title = NULL, subtitle = NULL, xtitle = N
     geom_point(aes(col=.data$group),alpha=1,size=1) + 
     scale_x_continuous(name = ifelse(!is.null(xtitle),xtitle,"Time From Baseline")) + 
     scale_y_continuous(name = ifelse(!is.null(ytitle),ytitle,"Tumour Volume")) +
-    scale_color_brewer(palette="Dark2") + # improve this with a custom palette option
-    #theme(legend.position = "none",axis.title = element_text(size=10)) +
+    scale_color_brewer(palette="Dark2") + 
     theme(axis.title = element_text(size=10)) +
     ggtitle(label = ifelse(!is.null(title),title,"Raw Measurement Data"),
             subtitle = ifelse(!is.null(subtitle),subtitle,"per Group")) 
+  if(!is.null(palette)) {
+    arm_slopes = arm_slopes + scale_color_manual(values = palette)
+  }
   return(arm_slopes)
 }
 
@@ -58,6 +61,7 @@ plot_raw_slopes = function(ready_data, title = NULL, subtitle = NULL, xtitle = N
 #' @param subtitle A custom title for the graph (optional)
 #' @param xtitle A custom x-axis title for the graph (optional)
 #' @param ytitle A custom y-axis title for the graph (optional)
+#' @param palette A custom palette for the graph, from the set_palette() function (optional)
 #' @return A graph in ggplot format, plotting one line for each individual over time, split by the grouping variable (eg. drug arm).
 #' @examples
 #' data("long_mice")
@@ -68,7 +72,7 @@ plot_raw_slopes = function(ready_data, title = NULL, subtitle = NULL, xtitle = N
 #'                         measurementcol = 'Value')
 #' plot_raw_lines(ready_data = ready_data ) # expects the columns: time, group, ID and measurement
 #' @export
-plot_raw_lines = function(ready_data, title = NULL, subtitle = NULL, xtitle = NULL, ytitle = NULL) {
+plot_raw_lines = function(ready_data, title = NULL, subtitle = NULL, xtitle = NULL, ytitle = NULL,palette = NULL) {
   if(is.null(title)) {
     cli::cli_alert_warning("No title specified, using default.")
   }
@@ -89,6 +93,9 @@ plot_raw_lines = function(ready_data, title = NULL, subtitle = NULL, xtitle = NU
     theme(axis.title = element_text(size=10)) +
     ggtitle(label = ifelse(!is.null(title),title,"Raw Measurement Data"),
             subtitle = ifelse(!is.null(subtitle),subtitle,"per Group")) 
+  if(!is.null(palette)) {
+    arm_slopes = arm_slopes + scale_color_manual(values = palette)
+  }
   return(arm_slopes)
 }
 
@@ -105,6 +112,7 @@ plot_raw_lines = function(ready_data, title = NULL, subtitle = NULL, xtitle = NU
 #' @param ytitle A custom y-axis title for the graph (optional)
 #' @param title A custom title for the graph (optional)
 #' @param subtitle A custom title for the graph (optional)
+#' @param palette A custom palette for the graph, from the set_palette() function (optional)
 #' @return A graph in ggplot format, plotting one growth curve per the grouping variable (eg. drug arm).
 #' @examples
 #' data("long_mice")
@@ -116,7 +124,7 @@ plot_raw_lines = function(ready_data, title = NULL, subtitle = NULL, xtitle = NU
 #' mixed_model = mixed_effect_model(ready_data = ready_data)
 #' plot_modelled_curves(model = mixed_model ) 
 #' @export
-plot_modelled_curves = function(model,xtitle = NULL,ytitle = NULL,title = NULL,subtitle = NULL) {
+plot_modelled_curves = function(model,xtitle = NULL,ytitle = NULL,title = NULL, subtitle = NULL,palette = NULL) {
   model_interactions_curves  = sjPlot::plot_model(model,type="int") + 
     theme_minimal() + 
     theme(axis.title = element_text(size=10)) +
@@ -125,9 +133,11 @@ plot_modelled_curves = function(model,xtitle = NULL,ytitle = NULL,title = NULL,s
     scale_color_brewer(palette="Dark2") + # improve this with a custom optional palette option
     ggtitle(label = ifelse(!is.null(title),title,"Predicted Value per Group"),
             subtitle = ifelse(!is.null(subtitle),subtitle,"Mixed-Effect Linear Model")) +
-    #theme(legend.position = "none",axis.title = element_text(size=10)) +
     theme(axis.title = element_text(size=10)) +
     ggplot2::coord_cartesian(ylim=c(0,2))
+  if(!is.null(palette)) {
+    model_interactions_curves = model_interactions_curves + scale_color_manual(values = palette)
+  }
   return(model_interactions_curves)
 }
 
@@ -144,6 +154,7 @@ plot_modelled_curves = function(model,xtitle = NULL,ytitle = NULL,title = NULL,s
 #' @param ytitle A custom y-axis title for the graph (optional)
 #' @param title A custom title for the graph (optional)
 #' @param subtitle A custom title for the graph (optional)
+#' @param palette A custom palette for the graph, from the set_palette() function (optional)
 #' @return A graph in ggplot format, plotting one growth curve per the grouping variable (eg. drug arm).
 #' @examples
 #' data("long_mice")
@@ -155,7 +166,7 @@ plot_modelled_curves = function(model,xtitle = NULL,ytitle = NULL,title = NULL,s
 #' mixed_model = mixed_effect_model(ready_data = ready_data)
 #' plot_modelled_slopes(model = mixed_model ) 
 #' @export
-plot_modelled_slopes = function(model,xtitle = NULL,ytitle = NULL,title = NULL,subtitle = NULL) {
+plot_modelled_slopes = function(model,xtitle = NULL,ytitle = NULL,title = NULL,subtitle = NULL,palette=NULL) {
   curves = plot_modelled_curves(model)
   d = curves$data
   d = as.data.frame(d)
@@ -164,13 +175,15 @@ plot_modelled_slopes = function(model,xtitle = NULL,ytitle = NULL,title = NULL,s
     theme_minimal() + 
     scale_y_continuous(name = ifelse(!is.null(ytitle),ytitle,"Tumour Volume")) + 
     scale_x_continuous(name = ifelse(!is.null(xtitle),xtitle,"Time From Baseline")) + 
-    scale_color_brewer(palette="Dark2") + # improve this with a custom optional palette option
+    scale_color_brewer(palette="Dark2") + 
     ggtitle(label = ifelse(!is.null(title),title,"Predicted Value per Group"),
             subtitle = ifelse(!is.null(subtitle),subtitle,"Mixed-Effect Linear Model")) +
-    #theme(legend.position = "none",axis.title = element_text(size=10)) +
     theme(axis.title = element_text(size=10)) +
     ggtitle(label = "Predicted Growth per Drug",
             subtitle = "Mixed-Effect Linear Model")
+  if(!is.null(palette)) {
+    model_interactions_slopes = model_interactions_slopes + scale_color_manual(values = palette)
+  }
   return(model_interactions_slopes)
 }
 
@@ -182,9 +195,11 @@ plot_modelled_slopes = function(model,xtitle = NULL,ytitle = NULL,title = NULL,s
 #' It performs minimal error checking and will crash ungracefully if the wrong things are given to it.
 #'
 #' @param model The mixed-effect model produced by the mixed_effect_model function
+#' @param palette A custom palette for the graph, from the set_palette() function (optional)
+
 #' @return A graph in ggplot format, a forest plot of interaction terms, ie. slope coefficients.
 #' @export
-plot_interaction_forest = function(model) {
+plot_interaction_forest = function(model, palette=NULL) {
   # all credit to sjPlot, we are leaning on it hard here
   
   # forest model of interactions
@@ -208,7 +223,7 @@ plot_interaction_forest = function(model) {
           axis.text.y = element_blank(),
           axis.title = element_text(size=10)) +
     scale_x_continuous(name = "Coefficient") +
-    #scale_color_brewer(palette="Dark2") + # improve this with a custom optional palette option
+    scale_color_brewer(palette="Dark2") + 
     scale_y_discrete(name = "Group") + 
     geom_vline(xintercept = 0, linetype="dashed", col="grey10") + 
     geom_text(nudge_y = 0.25, size=3) +
@@ -220,5 +235,8 @@ plot_interaction_forest = function(model) {
               nudge_y = -0.25,size=3) + 
     ggtitle(label = "Growth Rate Difference",
             subtitle = "Versus Control")
+  if(!is.null(palette)) {
+    model_forest = model_forest + scale_color_manual(values = palette)
+  }
   return(model_forest)
 }

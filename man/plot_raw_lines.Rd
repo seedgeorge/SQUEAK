@@ -9,7 +9,8 @@ plot_raw_lines(
   title = NULL,
   subtitle = NULL,
   xtitle = NULL,
-  ytitle = NULL
+  ytitle = NULL,
+  palette = NULL
 )
 }
 \arguments{
@@ -22,6 +23,8 @@ plot_raw_lines(
 \item{xtitle}{A custom x-axis title for the graph (optional)}
 
 \item{ytitle}{A custom y-axis title for the graph (optional)}
+
+\item{palette}{A custom palette for the graph, from the set_palette() function (optional)}
 }
 \value{
 A graph in ggplot format, plotting one line for each individual over time, split by the grouping variable (eg. drug arm).
