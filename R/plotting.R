@@ -21,7 +21,7 @@
 #'                         measurementcol = 'Value')
 #' plot_raw_slopes(ready_data = ready_data ) # expects the columns: time, group, ID and measurement
 #' @export
-plot_raw_slopes = function(ready_data, title = NULL, subtitle = NULL, xtitle = NULL, ytitle = NULL) {
+plot_raw_slopes = function(ready_data, title = NULL, subtitle = NULL, xtitle = NULL, ytitle = NULL,palette = NULL) {
   if(is.null(title)) {
     cli::cli_alert_warning("No title specified, using default.")
   }
@@ -38,7 +38,8 @@ plot_raw_slopes = function(ready_data, title = NULL, subtitle = NULL, xtitle = N
     scale_x_continuous(name = ifelse(!is.null(xtitle),xtitle,"Time From Baseline")) + 
     scale_y_continuous(name = ifelse(!is.null(ytitle),ytitle,"Tumour Volume")) +
     scale_color_brewer(palette="Dark2") + # improve this with a custom palette option
-    theme(legend.position="none") +
+    #theme(legend.position = "none",axis.title = element_text(size=10)) +
+    theme(axis.title = element_text(size=10)) +
     ggtitle(label = ifelse(!is.null(title),title,"Raw Measurement Data"),
             subtitle = ifelse(!is.null(subtitle),subtitle,"per Group")) 
   return(arm_slopes)
@@ -84,7 +85,8 @@ plot_raw_lines = function(ready_data, title = NULL, subtitle = NULL, xtitle = NU
     scale_x_continuous(name = ifelse(!is.null(xtitle),xtitle,"Time From Baseline")) + 
     scale_y_continuous(name = ifelse(!is.null(ytitle),ytitle,"Tumour Volume")) +
     scale_color_brewer(palette="Dark2") + # improve this with a custom optional palette option
-    theme(legend.position="none") +
+    #theme(legend.position = "none",axis.title = element_text(size=10)) +
+    theme(axis.title = element_text(size=10)) +
     ggtitle(label = ifelse(!is.null(title),title,"Raw Measurement Data"),
             subtitle = ifelse(!is.null(subtitle),subtitle,"per Group")) 
   return(arm_slopes)
@@ -98,11 +100,11 @@ plot_raw_lines = function(ready_data, title = NULL, subtitle = NULL, xtitle = NU
 #' It performs minimal error checking and will crash ungracefully if the wrong things are given to it.
 #' The optional parameters allow the user to specify axis/title labels.
 #'
-#' @param ready_data The mixed-effect model produced by the mixed_effect_model function
-#' @param title A custom title for the graph (optional)
-#' @param subtitle A custom title for the graph (optional)
+#' @param model The mixed-effect model produced by the mixed_effect_model function
 #' @param xtitle A custom x-axis title for the graph (optional)
 #' @param ytitle A custom y-axis title for the graph (optional)
+#' @param title A custom title for the graph (optional)
+#' @param subtitle A custom title for the graph (optional)
 #' @return A graph in ggplot format, plotting one growth curve per the grouping variable (eg. drug arm).
 #' @examples
 #' data("long_mice")
@@ -112,7 +114,7 @@ plot_raw_lines = function(ready_data, title = NULL, subtitle = NULL, xtitle = NU
 #'                         groupcol = 'Group',
 #'                         measurementcol = 'Value')
 #' mixed_model = mixed_effect_model(ready_data = ready_data)
-#' plot_modelled_curves(ready_data = ready_data ) # expects the columns: time, group, ID and measurement
+#' plot_modelled_curves(model = mixed_model ) 
 #' @export
 plot_modelled_curves = function(model,xtitle = NULL,ytitle = NULL,title = NULL,subtitle = NULL) {
   model_interactions_curves  = sjPlot::plot_model(model,type="int") + 
@@ -123,7 +125,100 @@ plot_modelled_curves = function(model,xtitle = NULL,ytitle = NULL,title = NULL,s
     scale_color_brewer(palette="Dark2") + # improve this with a custom optional palette option
     ggtitle(label = ifelse(!is.null(title),title,"Predicted Value per Group"),
             subtitle = ifelse(!is.null(subtitle),subtitle,"Mixed-Effect Linear Model")) +
-    theme(legend.position = "none",axis.title = element_text(size=10)) +
-    coord_cartesian(ylim=c(0,2))
+    #theme(legend.position = "none",axis.title = element_text(size=10)) +
+    theme(axis.title = element_text(size=10)) +
+    ggplot2::coord_cartesian(ylim=c(0,2))
   return(model_interactions_curves)
+}
+
+
+#' Plot Estimated Slopes from the ME Model
+#'
+#' This SQUEAK function a pre-computed model and plots curves for each group
+#' Y-axis is log-transformed, so curves should be apparent.
+#' It performs minimal error checking and will crash ungracefully if the wrong things are given to it.
+#' The optional parameters allow the user to specify axis/title labels.
+#'
+#' @param model The mixed-effect model produced by the mixed_effect_model function
+#' @param xtitle A custom x-axis title for the graph (optional)
+#' @param ytitle A custom y-axis title for the graph (optional)
+#' @param title A custom title for the graph (optional)
+#' @param subtitle A custom title for the graph (optional)
+#' @return A graph in ggplot format, plotting one growth curve per the grouping variable (eg. drug arm).
+#' @examples
+#' data("long_mice")
+#' ready_data = check_long(long_mice,
+#'                         timecol = "Days",
+#'                         IDcol = 'Number',
+#'                         groupcol = 'Group',
+#'                         measurementcol = 'Value')
+#' mixed_model = mixed_effect_model(ready_data = ready_data)
+#' plot_modelled_slopes(model = mixed_model ) 
+#' @export
+plot_modelled_slopes = function(model,xtitle = NULL,ytitle = NULL,title = NULL,subtitle = NULL) {
+  curves = plot_modelled_curves(model)
+  d = curves$data
+  d = as.data.frame(d)
+  model_interactions_slopes= ggplot(data = d, aes(x= .data$x,y=log(.data$predicted),col=.data$group)) + 
+    geom_line(size=1) + 
+    theme_minimal() + 
+    scale_y_continuous(name = ifelse(!is.null(ytitle),ytitle,"Tumour Volume")) + 
+    scale_x_continuous(name = ifelse(!is.null(xtitle),xtitle,"Time From Baseline")) + 
+    scale_color_brewer(palette="Dark2") + # improve this with a custom optional palette option
+    ggtitle(label = ifelse(!is.null(title),title,"Predicted Value per Group"),
+            subtitle = ifelse(!is.null(subtitle),subtitle,"Mixed-Effect Linear Model")) +
+    #theme(legend.position = "none",axis.title = element_text(size=10)) +
+    theme(axis.title = element_text(size=10)) +
+    ggtitle(label = "Predicted Growth per Drug",
+            subtitle = "Mixed-Effect Linear Model")
+  return(model_interactions_slopes)
+}
+
+
+#' Plot Interaction Terms from the ME Model
+#'
+#' This SQUEAK function uses a pre-computed model and plots the interaction term results for each group.
+#' The results are presented against a reference level. 
+#' It performs minimal error checking and will crash ungracefully if the wrong things are given to it.
+#'
+#' @param model The mixed-effect model produced by the mixed_effect_model function
+#' @return A graph in ggplot format, a forest plot of interaction terms, ie. slope coefficients.
+#' @export
+plot_interaction_forest = function(model) {
+  # all credit to sjPlot, we are leaning on it hard here
+  
+  # forest model of interactions
+  m = sjPlot::plot_model(model,
+                         terms = colnames(stats::coef(model))[grepl(x = colnames(stats::coef(model)),pattern = ":")],
+                         pred.type = "re",show.intercept = T)$data
+  m$term = gsub(x=as.vector(m$term),pattern = "time:group",replacement = "")
+  m$term = factor(m$term,levels = rev(m$term))
+  m$pvalformatted = paste("p =", format.pval(m$p.value, eps= 0.001, digits = 2))
+  # make plot 
+  model_forest = ggplot(data = m,
+                        aes(y=.data$term, 
+                            x=.data$estimate,
+                            xmin = .data$conf.low, 
+                            xmax = .data$conf.high,
+                            col = .data$term,label=.data$term)) + 
+    geom_pointrange() + 
+    xlim(-0.1,0.05) +
+    theme_minimal() + 
+    theme(legend.position = "none", 
+          axis.text.y = element_blank(),
+          axis.title = element_text(size=10)) +
+    scale_x_continuous(name = "Coefficient") +
+    #scale_color_brewer(palette="Dark2") + # improve this with a custom optional palette option
+    scale_y_discrete(name = "Group") + 
+    geom_vline(xintercept = 0, linetype="dashed", col="grey10") + 
+    geom_text(nudge_y = 0.25, size=3) +
+    geom_text(data=m,
+              aes(y=.data$term, 
+                  x=.data$estimate,
+                  col = .data$term,
+                  label=.data$pvalformatted),
+              nudge_y = -0.25,size=3) + 
+    ggtitle(label = "Growth Rate Difference",
+            subtitle = "Versus Control")
+  return(model_forest)
 }

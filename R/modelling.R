@@ -22,7 +22,7 @@ mixed_effect_model = function(ready_data, random_slope = TRUE, random_intercept 
               data = ready_data) 
   }
   if (random_slope == FALSE & random_intercept == FALSE) {
-    cli::cli_alert_info("Are you sure about not having random slopes or intercepts?")
+    cli::cli_alert_info("Are you sure about not having random slopes or intercepts? Currently not supported...")
     stop()
   }
  return(model) 

@@ -8,7 +8,7 @@ This package stands on the shoulders of giants, and wraps a number of excellent 
 
 Currently, SQUEAK is available through github and requires the `devtools` library.
 
-``` R
+``` r
 # install.packages("devtools")
 devtools::install_github("seedgeorge/SQUEAK")
 ```
@@ -17,7 +17,7 @@ devtools::install_github("seedgeorge/SQUEAK")
 
 The following code uses a dataset included in the package, performs a simple data check, and then makes a simple plot.
 
-``` R
+``` r
 data("long_mice")
 ready_data = check_long(long_mice,
                         timecol = "Days",

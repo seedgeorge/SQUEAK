@@ -10,7 +10,8 @@ check_long(
   groupcol = NULL,
   IDcol = NULL,
   measurementcol = NULL,
-  set_nested = TRUE
+  set_nested = TRUE,
+  reference_level = NULL
 )
 }
 \arguments{
@@ -25,6 +26,8 @@ check_long(
 \item{measurementcol}{Name of the 'measurement' column (optional).}
 
 \item{set_nested}{Individual IDs should usually be unique to treatment groups. If this is not desired, set this flag to FALSE.}
+
+\item{reference_level}{Name of the group that relates to a control/vehicle/reference level (optional)}
 }
 \value{
 The infile, checked and cleaned, still in long format.

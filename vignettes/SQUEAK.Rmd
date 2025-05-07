@@ -52,16 +52,27 @@ ready_data = check_long(long_mice,
                         timecol = "Days",
                         IDcol = 'Number',
                         groupcol = 'Group',
-                        measurementcol = 'Value')
+                        measurementcol = 'Value',
+                        reference_level = 'Control')
 ```
 
 ## Basic Plots
 It is possible to make some starter plots.
+First, we will use a utility function to make a palette that SQUEAK will understand.
+```{r}
+colors = set_palette(ready_data)
+barplot(rep(1,length(colors)), 
+        col=colors, yaxt='n', 
+        border=F, 
+        names.arg = names(colors), 
+        las=2)
+```
+
 
 A line plot, one line per individual.
 ```{r fig.height=6, fig.width=4}
 # raw line graphs
-plot_raw_lines(ready_data = ready_data )
+plot_raw_lines(ready_data = ready_data)
 ```
 
 Some slopes, one per individual.
@@ -83,5 +94,12 @@ mixed_model = mixed_effect_model(ready_data = ready_data,random_slope = T,random
 plot_modelled_curves(mixed_model)
 ```
 
+```{r fig.height=4, fig.width=4}
+plot_modelled_slopes(mixed_model)
+```
+
+```{r fig.height=4, fig.width=4}
+plot_interaction_forest(mixed_model)
+```
 
 ## Combined Plot Assembly
