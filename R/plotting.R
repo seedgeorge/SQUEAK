@@ -39,7 +39,7 @@ plot_raw_slopes = function(ready_data, title = NULL, subtitle = NULL, xtitle = N
     scale_x_continuous(name = ifelse(!is.null(xtitle),xtitle,"Time From Baseline")) + 
     scale_y_continuous(name = ifelse(!is.null(ytitle),ytitle,"Tumour Volume")) +
     scale_color_brewer(palette="Dark2") + 
-    theme(axis.title = element_text(size=10)) +
+    theme(legend.position = "none", axis.title = element_text(size=10)) +
     ggtitle(label = ifelse(!is.null(title),title,"Raw Measurement Data"),
             subtitle = ifelse(!is.null(subtitle),subtitle,"per Group")) 
   if(!is.null(palette)) {
@@ -88,9 +88,8 @@ plot_raw_lines = function(ready_data, title = NULL, subtitle = NULL, xtitle = NU
     geom_point(aes(col=.data$group), alpha=0.5, size=1) +
     scale_x_continuous(name = ifelse(!is.null(xtitle),xtitle,"Time From Baseline")) + 
     scale_y_continuous(name = ifelse(!is.null(ytitle),ytitle,"Tumour Volume")) +
-    scale_color_brewer(palette="Dark2") + # improve this with a custom optional palette option
-    #theme(legend.position = "none",axis.title = element_text(size=10)) +
-    theme(axis.title = element_text(size=10)) +
+    scale_color_brewer(palette="Dark2") + 
+    theme(legend.position = "none",axis.title = element_text(size=10)) +
     ggtitle(label = ifelse(!is.null(title),title,"Raw Measurement Data"),
             subtitle = ifelse(!is.null(subtitle),subtitle,"per Group")) 
   if(!is.null(palette)) {
@@ -113,6 +112,7 @@ plot_raw_lines = function(ready_data, title = NULL, subtitle = NULL, xtitle = NU
 #' @param title A custom title for the graph (optional)
 #' @param subtitle A custom title for the graph (optional)
 #' @param palette A custom palette for the graph, from the set_palette() function (optional)
+#' @param grouptitle A custom title for the grouping variable, replacing the default 'group' (optional)
 #' @return A graph in ggplot format, plotting one growth curve per the grouping variable (eg. drug arm).
 #' @examples
 #' data("long_mice")
@@ -124,7 +124,7 @@ plot_raw_lines = function(ready_data, title = NULL, subtitle = NULL, xtitle = NU
 #' mixed_model = mixed_effect_model(ready_data = ready_data)
 #' plot_modelled_curves(model = mixed_model ) 
 #' @export
-plot_modelled_curves = function(model,xtitle = NULL,ytitle = NULL,title = NULL, subtitle = NULL,palette = NULL) {
+plot_modelled_curves = function(model,xtitle = NULL,ytitle = NULL,title = NULL, subtitle = NULL,palette = NULL,grouptitle = NULL) {
   model_interactions_curves  = sjPlot::plot_model(model,type="int") + 
     theme_minimal() + 
     theme(axis.title = element_text(size=10)) +
@@ -137,6 +137,9 @@ plot_modelled_curves = function(model,xtitle = NULL,ytitle = NULL,title = NULL, 
     ggplot2::coord_cartesian(ylim=c(0,2))
   if(!is.null(palette)) {
     model_interactions_curves = model_interactions_curves + scale_color_manual(values = palette)
+  }
+  if(!is.null(grouptitle)) {
+    model_interactions_curves = model_interactions_curves +  ggplot2::guides(color=ggplot2::guide_legend(title=grouptitle))
   }
   return(model_interactions_curves)
 }
@@ -155,6 +158,7 @@ plot_modelled_curves = function(model,xtitle = NULL,ytitle = NULL,title = NULL, 
 #' @param title A custom title for the graph (optional)
 #' @param subtitle A custom title for the graph (optional)
 #' @param palette A custom palette for the graph, from the set_palette() function (optional)
+#' @param grouptitle A custom title for the grouping variable, replacing the default 'group' (optional)
 #' @return A graph in ggplot format, plotting one growth curve per the grouping variable (eg. drug arm).
 #' @examples
 #' data("long_mice")
@@ -166,7 +170,7 @@ plot_modelled_curves = function(model,xtitle = NULL,ytitle = NULL,title = NULL, 
 #' mixed_model = mixed_effect_model(ready_data = ready_data)
 #' plot_modelled_slopes(model = mixed_model ) 
 #' @export
-plot_modelled_slopes = function(model,xtitle = NULL,ytitle = NULL,title = NULL,subtitle = NULL,palette=NULL) {
+plot_modelled_slopes = function(model,xtitle = NULL,ytitle = NULL,title = NULL,subtitle = NULL,palette=NULL,grouptitle = NULL) {
   curves = plot_modelled_curves(model)
   d = curves$data
   d = as.data.frame(d)
@@ -183,6 +187,9 @@ plot_modelled_slopes = function(model,xtitle = NULL,ytitle = NULL,title = NULL,s
             subtitle = "Mixed-Effect Linear Model")
   if(!is.null(palette)) {
     model_interactions_slopes = model_interactions_slopes + scale_color_manual(values = palette)
+  }  
+  if(!is.null(grouptitle)) {
+    model_interactions_slopes = model_interactions_slopes + ggplot2::guides(color=ggplot2::guide_legend(title=grouptitle))
   }
   return(model_interactions_slopes)
 }

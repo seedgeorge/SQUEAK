@@ -1,4 +1,17 @@
+---
+output: github_document
+---
+
 <!-- README.md is generated from README.Rmd. Please edit that file -->
+
+```{r, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>",
+  fig.path = "man/figures/README-",
+  out.width = "100%"
+)
+```
 
 # SQUEAK - Statistical Quantification & Understanding of Experimental Animal Kinetics
 
@@ -16,48 +29,22 @@ devtools::install_github("seedgeorge/SQUEAK")
 ```
 
 ## Minimal Usage Example
-
 The following code uses a dataset included in the package, performs a simple data check, and then makes a simple plot.
-
-``` r
+```{r example, fig.height=5, fig.width=2.5, message=TRUE, warning=FALSE}
 library(SQUEAK)
-#> Loading required package: ggplot2
 data("long_mice")
 ready_data = check_long(long_mice,
                         timecol = "Days",
                         IDcol = 'Number',
                         groupcol = 'Group',
                         measurementcol = 'Value')
-#> ✔ All columns detected!
-#> ✔ Data types good!
-#> ℹ 4 Groups Detected
-#> ℹ Data structure suggests nested model, with unique individuals per group.
-#> ℹ Groups: "Control", "DrugX", "DrugY", and "ComboXY"
-#> ℹ Assuming reference level: "Control"
-#> ! 294 rows with NA detected, dropping these rows.
-#> ✔ 181 rows remaining.
-#> Data statistics:
-#> ℹ 19 Individuals
-#> ℹ Start Time: 0
-#> ℹ End Time: 24
-#> ℹ Minimum measurement: 0.03106832625
-#> ℹ Maximum measurement: 1.42182667828125
 plot_raw_lines(ready_data = ready_data) 
-#> ! No title specified, using default.
-#> ! No subtitle specified, using default.
 ```
-
-<img src="man/figures/README-example-1.png" width="100%"/>
 
 In this data, each line represents one mouse, and the mice are grouped in treatment arms.
 
 The next step is to make a mixed-effect regression model, which can also be plotted.
-
-``` r
+```{r cars, fig.height=3, fig.width=3, message=TRUE, warning=FALSE}
 mixed_model = mixed_effect_model(ready_data = ready_data)
-#>   0:     285.35575: -0.697490
-#>   1:     285.35575: -0.697490
 plot_modelled_curves(mixed_model)
 ```
-
-<img src="man/figures/README-cars-1.png" width="100%"/>

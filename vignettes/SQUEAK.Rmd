@@ -115,10 +115,16 @@ plot_interaction_forest(mixed_model,palette= colors)
 ```
 
 ## Combined Plot Assembly
-```{r}
-# slope = plot_raw_lines(ready_data = ready_data, palette= colors)
-# curvforest = plot_modelled_curves(mixed_model,palette = colors) / plot_interaction_forest(mixed_model,palette = colors) 
-# fig = slope + plot_spacer() + curvforest + plot_layout(ncol=3,widths = c(2,0.5,2))
-# fig
+```{r fig.height=7, fig.width=7, message=FALSE, warning=FALSE}
+slope = plot_raw_lines(ready_data = ready_data, palette= colors)
+curvforest = patchwork::wrap_plots(plot_modelled_curves(mixed_model,palette = colors,grouptitle = 'Treatment'),
+                                   plot_interaction_forest(mixed_model,palette = colors), 
+                                                                      ncol=1)
+fig = patchwork::wrap_plots(slope, patchwork::plot_spacer(),curvforest, ncol=3,
+                            widths = c(2,0.15,2),
+                            guides = 'collect')
+
+fig
+
 ```
 
