@@ -8,7 +8,7 @@
 #' @param random_intercept Option to set a random intercept for each individual in the model (optional)
 #' @return The model fit.
 #' @export
-mixed_effect_model = function(ready_data, random_slope = TRUE, random_intercept = FALSE) {
+mixed_effect_model = function(ready_data, random_slope = TRUE, random_intercept = TRUE) {
   if(random_slope == TRUE & random_intercept == TRUE) {
     model = nlme::lme(fixed = log(measurement) ~ time * group,
               random = ~ (1+time)|ID, # random slope random intercept

@@ -4,7 +4,7 @@
 \alias{mixed_effect_model}
 \title{Run Mixed Effect Model}
 \usage{
-mixed_effect_model(ready_data, random_slope = TRUE, random_intercept = FALSE)
+mixed_effect_model(ready_data, random_slope = TRUE, random_intercept = TRUE)
 }
 \arguments{
 \item{ready_data}{The input data.frame in long format, containing the columns: time, group, ID and measurement (required)}

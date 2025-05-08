@@ -102,8 +102,8 @@ mixed_model = mixed_effect_model(ready_data = ready_data,random_slope = T,random
 
 ## Model Plotting
 
-```{r fig.height=4, fig.width=4, message=FALSE, warning=FALSE}
-plot_modelled_curves(mixed_model,palette= colors)
+```{r fig.height=5, fig.width=5, message=FALSE, warning=FALSE}
+plot_modelled_curves(mixed_model,palette= colors,grouptitle = 'Treatment')
 ```
 
 ```{r fig.height=4, fig.width=4, message=FALSE, warning=FALSE}

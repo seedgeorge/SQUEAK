@@ -36,13 +36,13 @@ ready_data = check_long(long_mice,
                         timecol = "Days",
                         IDcol = 'Number',
                         groupcol = 'Group',
-                        measurementcol = 'Value')
+                        measurementcol = 'Value',
+                        reference_level = 'Control')
 #> ✔ All columns detected!
 #> ✔ Data types good!
 #> ℹ 4 Groups Detected
 #> ℹ Data structure suggests nested model, with unique individuals per group.
-#> ℹ Groups: "Control", "DrugX", "DrugY", and "ComboXY"
-#> ℹ Assuming reference level: "Control"
+#> ℹ Using reference level: "Control"
 #> ! 294 rows with NA detected, dropping these rows.
 #> ✔ 181 rows remaining.
 #> Data statistics:
@@ -51,12 +51,18 @@ ready_data = check_long(long_mice,
 #> ℹ End Time: 24
 #> ℹ Minimum measurement: 0.03106832625
 #> ℹ Maximum measurement: 1.42182667828125
-plot_raw_lines(ready_data = ready_data) 
-#> ! No title specified, using default.
-#> ! No subtitle specified, using default.
+colors = set_palette(ready_data)
 ```
 
-<img src="man/figures/README-example-1.png" width="75%" style="display: block; margin: auto;" />
+``` r
+plot_raw_lines(ready_data = ready_data, palette = colors) 
+#> ! No title specified, using default.
+#> ! No subtitle specified, using default.
+#> Scale for colour is already present.
+#> Adding another scale for colour, which will replace the existing scale.
+```
+
+<img src="man/figures/README-plot_lines-1.png" width="300" style="display: block; margin: auto;" />
 
 In this data, each line represents one mouse, and the mice are grouped
 in treatment arms.
@@ -65,17 +71,19 @@ The next step is to make a mixed-effect regression model, which can also
 be plotted.
 
 ``` r
-mixed_model = mixed_effect_model(ready_data = ready_data)
-#>   0:     285.35575: -0.697490
-#>   1:     285.35575: -0.697490
-plot_modelled_curves(mixed_model)
-#> Model has log-transformed response. Back-transforming predictions to
-#>   original response scale. Standard errors are still on the transformed
-#>   scale.
-#> Scale for y is already present.
-#> Adding another scale for y, which will replace the existing scale.
-#> Scale for colour is already present.
-#> Adding another scale for colour, which will replace the existing scale.
+mixed_model = mixed_effect_model(ready_data = ready_data,random_slope = T,random_intercept = T)
+#>   0:     252.11960: -0.819904  1.73393 -0.505521
+#>   1:     252.11960: -0.819904  1.73393 -0.505521
+plot_modelled_curves(mixed_model, grouptitle = 'Treatment',palette = colors)
 ```
 
-<img src="man/figures/README-cars-1.png" width="75%" style="display: block; margin: auto;" />
+<img src="man/figures/README-plot_model-1.png" width="300" style="display: block; margin: auto;" />
+
+And we can also access the statistical output, and see the difference in
+growth rate of the treatment arms to the control arm.
+
+``` r
+plot_interaction_forest(mixed_model, palette= colors)
+```
+
+<img src="man/figures/README-plot_forest-1.png" width="300" style="display: block; margin: auto;" />

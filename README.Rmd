@@ -8,9 +8,7 @@ output: github_document
 knitr::opts_chunk$set(
   collapse = TRUE,
   comment = "#>",
-  fig.path = "man/figures/README-",
-  fig.align = 'center',
-  out.width = "75%"
+  fig.path = "man/figures/README-"
 )
 ```
 
@@ -31,21 +29,31 @@ devtools::install_github("seedgeorge/SQUEAK")
 
 ## Minimal Usage Example
 The following code uses a dataset included in the package, performs a simple data check, and then makes a simple plot.
-```{r example, fig.height=5, fig.width=2.5, message=TRUE, warning=FALSE}
+```{r example, fig.align='center', fig.height=7, fig.width=3.5, message=TRUE, warning=FALSE, out.width=300, fig.retina=2}
 library(SQUEAK)
 data("long_mice")
 ready_data = check_long(long_mice,
                         timecol = "Days",
                         IDcol = 'Number',
                         groupcol = 'Group',
-                        measurementcol = 'Value')
-plot_raw_lines(ready_data = ready_data) 
+                        measurementcol = 'Value',
+                        reference_level = 'Control')
+colors = set_palette(ready_data)
+```
+
+```{r plot_lines, fig.align='center', fig.height=7, fig.width=3.5, message=TRUE, warning=FALSE, out.width=300, fig.retina=2}
+plot_raw_lines(ready_data = ready_data, palette = colors) 
 ```
 
 In this data, each line represents one mouse, and the mice are grouped in treatment arms.
 
 The next step is to make a mixed-effect regression model, which can also be plotted.
-```{r cars, fig.height=3, fig.width=3, message=TRUE, warning=FALSE}
-mixed_model = mixed_effect_model(ready_data = ready_data)
-plot_modelled_curves(mixed_model)
+```{r plot_model, fig.align='center', fig.height=2.5, fig.retina=2, fig.width=3, message=FALSE, warning=FALSE, out.width=300}
+mixed_model = mixed_effect_model(ready_data = ready_data,random_slope = T,random_intercept = T)
+plot_modelled_curves(mixed_model, grouptitle = 'Treatment',palette = colors)
+```
+
+And we can also access the statistical output, and see the difference in growth rate of the treatment arms to the control arm.
+```{r plot_forest, fig.align='center', fig.height=2.5, fig.retina=2, fig.width=3, message=FALSE, warning=FALSE, out.width=300}
+plot_interaction_forest(mixed_model, palette= colors)
 ```
