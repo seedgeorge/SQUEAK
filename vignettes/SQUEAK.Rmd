@@ -103,11 +103,11 @@ mixed_model = mixed_effect_model(ready_data = ready_data,random_slope = T,random
 ## Model Plotting
 
 ```{r fig.height=5, fig.width=5, message=FALSE, warning=FALSE}
-plot_modelled_curves(mixed_model,palette= colors,grouptitle = 'Treatment')
+plot_modelled_curves(mixed_model,palette= colors,grouptitle = 'Treatment',show_confidence = TRUE)
 ```
 
 ```{r fig.height=4, fig.width=4, message=FALSE, warning=FALSE}
-plot_modelled_slopes(mixed_model,palette= colors)
+plot_modelled_slopes(model = mixed_model, palette= colors)
 ```
 
 ```{r fig.height=4, fig.width=4, message=FALSE, warning=FALSE}
@@ -117,7 +117,8 @@ plot_interaction_forest(mixed_model,palette= colors)
 ## Combined Plot Assembly
 ```{r fig.height=7, fig.width=7, message=FALSE, warning=FALSE}
 slope = plot_raw_lines(ready_data = ready_data, palette= colors)
-curvforest = patchwork::wrap_plots(plot_modelled_curves(mixed_model,palette = colors,grouptitle = 'Treatment'),
+curvforest = patchwork::wrap_plots(plot_modelled_curves(mixed_model,palette = colors,
+                                                        grouptitle = 'Treatment'),
                                    plot_interaction_forest(mixed_model,palette = colors), 
                                                                       ncol=1)
 fig = patchwork::wrap_plots(slope, patchwork::plot_spacer(),curvforest, ncol=3,

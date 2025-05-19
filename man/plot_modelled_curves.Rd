@@ -11,7 +11,9 @@ plot_modelled_curves(
   title = NULL,
   subtitle = NULL,
   palette = NULL,
-  grouptitle = NULL
+  grouptitle = NULL,
+  ylim = NULL,
+  show_confidence = TRUE
 )
 }
 \arguments{
@@ -28,6 +30,10 @@ plot_modelled_curves(
 \item{palette}{A custom palette for the graph, from the set_palette() function (optional)}
 
 \item{grouptitle}{A custom title for the grouping variable, replacing the default 'group' (optional)}
+
+\item{ylim}{A custom set of y-axis limits, as a two-element vector ie. c(0,100) (optional)}
+
+\item{show_confidence}{Do you want to see confidence intervals? TRUE/FALSE, default=TRUE (optional)}
 }
 \value{
 A graph in ggplot format, plotting one growth curve per the grouping variable (eg. drug arm).

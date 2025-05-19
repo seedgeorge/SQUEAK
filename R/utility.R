@@ -61,6 +61,11 @@ check_long = function(long_data, timecol = NULL, groupcol = NULL, IDcol = NULL, 
   long_data = long_data[complete.cases(long_data),]
   cli::cli_alert_success(paste0(nrow(long_data)," rows remaining."))
   
+  ## Any 0 values in measurement? Add an offset to the data here to stop future issues
+  measure0 = sum(long_data[,measurementcol] == 0)
+  cli::cli_alert_warning(paste0(measure0," measurements of 0 detected, adding a 0.001 offset to dataset"))
+  long_data[,measurementcol] = long_data[,measurementcol] + 0.001 # offset included to avoid -Inf when logging..
+
   # Some summary numbers.
   cat("Data statistics:\n")
   cli::cli_alert_info(paste0(length(unique(unlist(long_data[,IDcol]))),' Individuals'))

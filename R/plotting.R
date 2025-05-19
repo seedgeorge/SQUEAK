@@ -113,6 +113,8 @@ plot_raw_lines = function(ready_data, title = NULL, subtitle = NULL, xtitle = NU
 #' @param subtitle A custom title for the graph (optional)
 #' @param palette A custom palette for the graph, from the set_palette() function (optional)
 #' @param grouptitle A custom title for the grouping variable, replacing the default 'group' (optional)
+#' @param ylim A custom set of y-axis limits, as a two-element vector ie. c(0,100) (optional)
+#' @param show_confidence Do you want to see confidence intervals? TRUE/FALSE, default=TRUE (optional)
 #' @return A graph in ggplot format, plotting one growth curve per the grouping variable (eg. drug arm).
 #' @examples
 #' data("long_mice")
@@ -124,22 +126,23 @@ plot_raw_lines = function(ready_data, title = NULL, subtitle = NULL, xtitle = NU
 #' mixed_model = mixed_effect_model(ready_data = ready_data)
 #' plot_modelled_curves(model = mixed_model ) 
 #' @export
-plot_modelled_curves = function(model,xtitle = NULL,ytitle = NULL,title = NULL, subtitle = NULL,palette = NULL,grouptitle = NULL) {
-  model_interactions_curves  = sjPlot::plot_model(model,type="int") + 
+plot_modelled_curves = function(model,xtitle = NULL,ytitle = NULL,title = NULL, subtitle = NULL,palette = NULL,grouptitle = NULL, ylim=NULL,show_confidence = TRUE) {
+  model_interactions_curves  = sjPlot::plot_model(model,type="int",ci.lvl = ifelse(show_confidence == TRUE,0.95,NA)) + 
     theme_minimal() + 
-    theme(axis.title = element_text(size=10)) +
     scale_y_continuous(name = ifelse(!is.null(ytitle),ytitle,"Tumour Volume")) + 
     scale_x_continuous(name = ifelse(!is.null(xtitle),xtitle,"Time From Baseline")) + 
     scale_color_brewer(palette="Dark2") + # improve this with a custom optional palette option
     ggtitle(label = ifelse(!is.null(title),title,"Predicted Value per Group"),
             subtitle = ifelse(!is.null(subtitle),subtitle,"Mixed-Effect Linear Model")) +
-    theme(axis.title = element_text(size=10)) +
-    ggplot2::coord_cartesian(ylim=c(0,2))
+    theme(axis.title = element_text(size=10)) 
   if(!is.null(palette)) {
     model_interactions_curves = model_interactions_curves + scale_color_manual(values = palette)
   }
   if(!is.null(grouptitle)) {
     model_interactions_curves = model_interactions_curves +  ggplot2::guides(color=ggplot2::guide_legend(title=grouptitle))
+  }
+  if(!is.null(ylim)) {
+    model_interactions_curves = model_interactions_curves + ggplot2::coord_cartesian(ylim=ylim)
   }
   return(model_interactions_curves)
 }
@@ -174,7 +177,7 @@ plot_modelled_slopes = function(model,xtitle = NULL,ytitle = NULL,title = NULL,s
   curves = plot_modelled_curves(model)
   d = curves$data
   d = as.data.frame(d)
-  model_interactions_slopes= ggplot(data = d, aes(x= .data$x,y=log(.data$predicted),col=.data$group)) + 
+  model_interactions_slopes = ggplot(data = d, aes(x= .data$x,y=log(.data$predicted),col=.data$group)) + 
     geom_line(size=1) + 
     theme_minimal() + 
     scale_y_continuous(name = ifelse(!is.null(ytitle),ytitle,"Tumour Volume")) + 
@@ -215,7 +218,7 @@ plot_interaction_forest = function(model, palette=NULL) {
                          pred.type = "re",show.intercept = T)$data
   m$term = gsub(x=as.vector(m$term),pattern = "time:group",replacement = "")
   m$term = factor(m$term,levels = rev(m$term))
-  m$pvalformatted = paste("p =", format.pval(m$p.value, eps= 0.001, digits = 2))
+  m$pvalformatted = paste("p =", format.pval(m$p.value, eps= 0.001, digits = 3))
   # make plot 
   model_forest = ggplot(data = m,
                         aes(y=.data$term, 
