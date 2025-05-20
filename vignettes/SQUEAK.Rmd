@@ -67,6 +67,7 @@ barplot(rep(1,length(colors)),
         border=F, 
         names.arg = names(colors), 
         las=2)
+colors[1] = 'grey20'
 
 # alternatively, you could use a custom named vector, manually assigning a color to each group
 colors = c('Control' = 'grey20',

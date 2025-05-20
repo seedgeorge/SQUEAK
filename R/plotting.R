@@ -185,9 +185,7 @@ plot_modelled_slopes = function(model,xtitle = NULL,ytitle = NULL,title = NULL,s
     scale_color_brewer(palette="Dark2") + 
     ggtitle(label = ifelse(!is.null(title),title,"Predicted Value per Group"),
             subtitle = ifelse(!is.null(subtitle),subtitle,"Mixed-Effect Linear Model")) +
-    theme(axis.title = element_text(size=10)) +
-    ggtitle(label = "Predicted Growth per Drug",
-            subtitle = "Mixed-Effect Linear Model")
+    theme(axis.title = element_text(size=10)) 
   if(!is.null(palette)) {
     model_interactions_slopes = model_interactions_slopes + scale_color_manual(values = palette)
   }  
@@ -206,10 +204,11 @@ plot_modelled_slopes = function(model,xtitle = NULL,ytitle = NULL,title = NULL,s
 #'
 #' @param model The mixed-effect model produced by the mixed_effect_model function
 #' @param palette A custom palette for the graph, from the set_palette() function (optional)
-
+#' @param title A custom title for the graph (optional)
+#' @param subtitle A custom title for the graph (optional)
 #' @return A graph in ggplot format, a forest plot of interaction terms, ie. slope coefficients.
 #' @export
-plot_interaction_forest = function(model, palette=NULL) {
+plot_interaction_forest = function(model, palette=NULL,title = NULL,subtitle = NULL) {
   # all credit to sjPlot, we are leaning on it hard here
   
   # forest model of interactions
@@ -243,8 +242,8 @@ plot_interaction_forest = function(model, palette=NULL) {
                   col = .data$term,
                   label=.data$pvalformatted),
               nudge_y = -0.25,size=3) + 
-    ggtitle(label = "Growth Rate Difference",
-            subtitle = "Versus Control")
+    ggtitle(label = ifelse(!is.null(title),title,"Growth Rate Difference"),
+            subtitle = ifelse(!is.null(subtitle),subtitle,"Versus Control")) 
   if(!is.null(palette)) {
     model_forest = model_forest + scale_color_manual(values = palette)
   }

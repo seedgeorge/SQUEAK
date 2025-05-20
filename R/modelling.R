@@ -17,9 +17,15 @@ mixed_effect_model = function(ready_data, random_slope = TRUE, random_intercept 
   }
   if (random_slope == TRUE & random_intercept == FALSE) {
     model = nlme::lme(fixed = log(measurement) ~ time * group,
-              random = ~ 1 |ID, # random slope random intercept
+              random = ~ 0+time | ID , # random slope 
               control = list(msVerbose = TRUE, returnObject = TRUE),
               data = ready_data) 
+  }
+  if (random_slope == FALSE & random_intercept == TRUE) {
+    model = nlme::lme(fixed = log(measurement) ~ time * group,
+                      random = ~ 1 |ID, # random intercept 
+                      control = list(msVerbose = TRUE, returnObject = TRUE),
+                      data = ready_data) 
   }
   if (random_slope == FALSE & random_intercept == FALSE) {
     cli::cli_alert_info("Are you sure about not having random slopes or intercepts? Currently not supported...")

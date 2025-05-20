@@ -4,12 +4,16 @@
 \alias{plot_interaction_forest}
 \title{Plot Interaction Terms from the ME Model}
 \usage{
-plot_interaction_forest(model, palette = NULL)
+plot_interaction_forest(model, palette = NULL, title = NULL, subtitle = NULL)
 }
 \arguments{
 \item{model}{The mixed-effect model produced by the mixed_effect_model function}
 
 \item{palette}{A custom palette for the graph, from the set_palette() function (optional)}
+
+\item{title}{A custom title for the graph (optional)}
+
+\item{subtitle}{A custom title for the graph (optional)}
 }
 \value{
 A graph in ggplot format, a forest plot of interaction terms, ie. slope coefficients.
