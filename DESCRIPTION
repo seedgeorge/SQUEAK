@@ -1,6 +1,6 @@
 Package: SQUEAK
 Title: Statistical Quantification & Understanding of Experimental Animal Kinetics
-Version: 0.0.0.9000
+Version: 0.0.0.9001
 Authors@R: 
     c(person("George", "Seed", , "seedgeorge@gmail.com", role = c("aut", "cre"),
            comment = c(ORCID = "0000-0002-1105-1781")),

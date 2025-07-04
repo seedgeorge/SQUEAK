@@ -166,8 +166,8 @@ column_check = function(long_data, timecol = NULL, groupcol = NULL, IDcol = NULL
 #' @export
 set_palette = function(ready_data, brewer_name = NULL) {
   groups = as.vector(unlist(unique(ready_data[,'group'])))
-  colors = RColorBrewer::brewer.pal(length(groups),
-                                    name = ifelse(is.null(brewer_name), 'Dark2',brewer_name))
+  groupcount = length(groups)
+  colors = grDevices::colorRampPalette(RColorBrewer::brewer.pal(8,name = ifelse(is.null(brewer_name), 'Dark2',brewer_name)))(groupcount)
   names(colors) = groups
   return(colors)
 }

@@ -6,6 +6,7 @@
 \usage{
 plot_raw_lines(
   ready_data,
+  facet = TRUE,
   title = NULL,
   subtitle = NULL,
   xtitle = NULL,
@@ -15,6 +16,8 @@ plot_raw_lines(
 }
 \arguments{
 \item{ready_data}{The input data.frame in long format, containing the columns: time, group, ID and measurement.}
+
+\item{facet}{Should each group be a separate graph (TRUE), or combined into one (FALSE)?}
 
 \item{title}{A custom title for the graph (optional)}
 

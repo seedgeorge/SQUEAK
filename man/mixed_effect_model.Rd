@@ -20,3 +20,11 @@ The model fit.
 This SQUEAK function wraps some code from nlme to run a mixed-effect regression model.
 It will error out ungracefully if problems are detected, and expects a data frame with the columns: 'time','group','ID','measurement' It is suggested to run the utility function check_long() to determine if your data is the correct format.
 }
+\details{
+Some guidelines:
+\itemize{
+\item You should use random slope almost always. This means 'each individual can grow at a different rate', and the model will factor that in.
+\item If the model fails to converge, you can consider setting random_intercept to FALSE, which produces a less-strict but still-plausible model.
+\item If the model still fails to converge, the data may simply not be viable for this analysis.
+}
+}

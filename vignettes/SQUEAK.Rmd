@@ -127,6 +127,5 @@ fig = patchwork::wrap_plots(slope, patchwork::plot_spacer(),curvforest, ncol=3,
                             guides = 'collect')
 
 fig
-
 ```
 

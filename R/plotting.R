@@ -57,6 +57,7 @@ plot_raw_slopes = function(ready_data, title = NULL, subtitle = NULL, xtitle = N
 #' The optional parameters allow the user to specify axis/title labels.
 #'
 #' @param ready_data The input data.frame in long format, containing the columns: time, group, ID and measurement. 
+#' @param facet Should each group be a separate graph (TRUE), or combined into one (FALSE)? 
 #' @param title A custom title for the graph (optional)
 #' @param subtitle A custom title for the graph (optional)
 #' @param xtitle A custom x-axis title for the graph (optional)
@@ -72,7 +73,7 @@ plot_raw_slopes = function(ready_data, title = NULL, subtitle = NULL, xtitle = N
 #'                         measurementcol = 'Value')
 #' plot_raw_lines(ready_data = ready_data ) # expects the columns: time, group, ID and measurement
 #' @export
-plot_raw_lines = function(ready_data, title = NULL, subtitle = NULL, xtitle = NULL, ytitle = NULL,palette = NULL) {
+plot_raw_lines = function(ready_data, facet=TRUE, title = NULL, subtitle = NULL, xtitle = NULL, ytitle = NULL,palette = NULL) {
   if(is.null(title)) {
     cli::cli_alert_warning("No title specified, using default.")
   }
@@ -80,7 +81,6 @@ plot_raw_lines = function(ready_data, title = NULL, subtitle = NULL, xtitle = NU
     cli::cli_alert_warning("No subtitle specified, using default.")
   }
   arm_slopes = ggplot(ready_data,aes(x = .data$time, y = .data$measurement,group=.data$ID)) + 
-    facet_wrap(~ .data$group,nrow=length(unique(ready_data$group))) + 
     geom_line(col="darkgrey") + 
     theme_minimal() +
     theme(axis.title = element_text(size=10)) +
@@ -94,6 +94,9 @@ plot_raw_lines = function(ready_data, title = NULL, subtitle = NULL, xtitle = NU
             subtitle = ifelse(!is.null(subtitle),subtitle,"per Group")) 
   if(!is.null(palette)) {
     arm_slopes = arm_slopes + scale_color_manual(values = palette)
+  }
+  if(facet == TRUE) {
+    arm_slopes = arm_slopes + facet_wrap(~ .data$group,nrow=length(unique(ready_data$group))) 
   }
   return(arm_slopes)
 }
